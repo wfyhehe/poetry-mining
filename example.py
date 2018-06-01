@@ -1,4 +1,5 @@
 import os
+import random
 
 from analyzer import Analyzer, plot_vectors
 from preprocessor import CutResult, cut_poetry
@@ -12,7 +13,7 @@ def print_counter(counter):
 
 def example():
     saved_dir = os.path.join(os.curdir, "out")
-    result = cut_poetry("全唐诗.txt", saved_dir)
+    result = cut_poetry("全唐诗_tiny.txt", saved_dir)
     analyzer = Analyzer(result, saved_dir)
     # 画图
     tf_idf_vector_list = []
@@ -62,5 +63,34 @@ def example():
         print("根据word2vector标准： %s\n" % analyzer.find_similar_poet(poet, use_w2v=True))
 
 
+def shrink():
+    poems = []
+    with open('全唐诗.txt', 'r', encoding='utf-8') as f:
+        poem = ''
+        choose_count = 0
+        abandon_count = 0
+        for line in f:
+            if line.strip() == "":
+                continue
+
+            if "【" in line:
+                if random.random() < 0.1:
+                    choose_count += 1
+                    poems.append('\n')
+                    poems.append(poem)
+                else:
+                    abandon_count += 1
+
+                poem = ''
+            poem += line
+
+    print(choose_count)
+    print(abandon_count)
+
+    with open('全唐诗_tiny.txt', 'w', encoding='utf-8') as f:
+        f.writelines(poems)
+
+
 if __name__ == '__main__':
-    example()
+    # example()
+    shrink()
