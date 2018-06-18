@@ -13,7 +13,7 @@ def print_counter(counter):
 
 def example():
     saved_dir = os.path.join(os.curdir, "out")
-    result = cut_poetry("全唐诗_tiny.txt", saved_dir)
+    result = cut_poetry("全宋词.txt", saved_dir)
     analyzer = Analyzer(result, saved_dir)
     # 画图
     tf_idf_vector_list = []
@@ -30,7 +30,8 @@ def example():
 
     print("**基于统计的分析")
     print("写作数量排名：")
-    print_counter(result.author_counter.most_common(10))
+    most_productive_poets = result.author_counter.most_common(10)
+    print_counter(most_productive_poets)
 
     print("最常用的词：")
     cnt = 0
@@ -44,7 +45,8 @@ def example():
     print_counter(l)
 
     print("最常用的名词：")
-    print_counter(result.word_property_counter_dict['n'].most_common(10))
+    most_common_nouns = result.word_property_counter_dict['n'].most_common(10)
+    print_counter(most_common_nouns)
 
     print("最常见的地名：")
     print_counter(result.word_property_counter_dict['ns'].most_common(10))
@@ -53,11 +55,11 @@ def example():
     print_counter(result.word_property_counter_dict['a'].most_common(10))
 
     print("**基于词向量的分析")
-    for word in ["春", "鸳鸯", "垂柳", "枕"]:
+    for word in list(most_common_nouns):
         print("与 %s 相关的词：" % word)
         print_counter(analyzer.find_similar_word(word))
 
-    for poet in ["李白", "杜甫", "白居易"]:
+    for poet in list(most_productive_poets)[:4]:
         print("与 %s 用词相近的诗人：" % poet)
         print("根据tf-idf标准： %s" % analyzer.find_similar_poet(poet))
         print("根据word2vector标准： %s\n" % analyzer.find_similar_poet(poet, use_w2v=True))
@@ -65,7 +67,7 @@ def example():
 
 def shrink():
     poems = []
-    with open('全唐诗.txt', 'r', encoding='utf-8') as f:
+    with open('全宋词.txt', 'r', encoding='utf-8') as f:
         poem = ''
         choose_count = 0
         abandon_count = 0
@@ -87,10 +89,10 @@ def shrink():
     print(choose_count)
     print(abandon_count)
 
-    with open('全唐诗_tiny.txt', 'w', encoding='utf-8') as f:
+    with open('全宋词_tiny.txt', 'w', encoding='utf-8') as f:
         f.writelines(poems)
 
 
 if __name__ == '__main__':
-    # example()
-    shrink()
+    example()
+    # shrink()

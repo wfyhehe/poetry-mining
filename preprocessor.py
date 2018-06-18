@@ -40,8 +40,8 @@ def _is_chinese(c):
 
 def cut_poetry(filename, saved_dir):
     """
-    对全唐诗分词
-    :param: filename: 全唐诗输入文件位置
+    对全宋词分词
+    :param: filename: 全宋词输入文件位置
             saved_location: 结果存储位置
     :return:分词结果
     """
@@ -61,10 +61,8 @@ def cut_poetry(filename, saved_dir):
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 line_count += 1
-                if line_count % 5000 == 0:
+                if line_count % 500 == 0:
                     print('%d lines processed.' % line_count)
-                # if line_count > 10000:
-                #     break
                 try:
                     if line.strip() == "":
                         continue
@@ -95,10 +93,13 @@ def cut_poetry(filename, saved_dir):
                         result.word_counter[word] += 1
                         divided_lines.append(word)
                 except Exception as e:
-                    print("%d-解析全唐诗文件异常 %s" % (line_count, line))
+                    print("%d-解析全宋词文件异常 %s" % (line_count, line))
                     raise e
         # 加入最后一次解析的结果
         result.add_cut_poetry(current_author, divided_lines)
         with open(target_file_path, 'wb') as f:
             pickle.dump(result, f)
+        f.close()
+        print('closed')
+
     return result
