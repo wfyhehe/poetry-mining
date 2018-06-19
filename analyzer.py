@@ -73,7 +73,10 @@ class Analyzer(object):
                     count += 1
                 except KeyError:  # 有的词语不满足min_count则不会被记录在词表中
                     pass
-            word_vector.append(np.array([v / count for v in vec]))
+
+            single_word_vector = np.array([v / count for v in vec]) \
+                if count > 0 else np.zeros(len(vec))
+            word_vector.append(single_word_vector)
         os.remove("cut_poetry")
         return model, word_vector
 

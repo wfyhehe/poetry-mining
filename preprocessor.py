@@ -3,7 +3,7 @@ import pickle
 
 from collections import Counter, OrderedDict
 from jieba import posseg as pseg
-
+from constants import TITLE_CONTENT_THRESHOLD, END_POET_LIST_SEPARATOR
 
 class CutResult(object):
     """
@@ -41,11 +41,11 @@ def _is_chinese(c):
 def cut_poetry(filename, saved_dir):
     """
     对全宋词分词
-    :param: filename: 全宋词输入文件位置
-            saved_location: 结果存储位置
-    :return:分词结果
+    :PARAM: FILENAME: 全宋词输入文件位置
+            SAVED_LOCATION: 结果存储位置
+    :RETURN:分词结果
     """
-    target_file_path = os.path.join(saved_dir, 'cut_result.pkl')
+    target_file_path = os.path.join(saved_dir, 'cut_result_song.pkl')
     if not os.path.exists(saved_dir):
         os.mkdir(saved_dir)
     if os.path.exists(target_file_path):
@@ -53,31 +53,44 @@ def cut_poetry(filename, saved_dir):
         with open(target_file_path, 'rb') as f:
             result = pickle.load(f)
     else:
-        print('begin cutting poetry...')
+        print('cutting poetry...')
         result = CutResult()
         line_count = 0
         current_author = None
         divided_lines = []
+        author_list = []
+        author_filled = False
         with open(filename, 'r', encoding='utf-8') as f:
             for line in f:
                 line_count += 1
-                if line_count % 500 == 0:
+                if line_count % 1000 == 0:
                     print('%d lines processed.' % line_count)
                 try:
-                    if line.strip() == "":
+                    line = line.strip()
+                    if line == "":
                         continue
+
+                    if line == END_POET_LIST_SEPARATOR:
+                        author_filled = True
+                        continue
+
+                    if not author_filled:
+                        author_list.append(line)
+                        continue
+
                     # 解析作者
-                    if "【" in line:
-                        header = line.split()[1]
-                        author = header[header.find("】") + 1:].strip()
-                        result.author_counter[author] += 1
+                    if line in author_list:
                         divided_lines.append("\n")
-                        # 将当前分词后的结果加入结果表中
-                        if current_author is not None:
-                            result.add_cut_poetry(current_author, divided_lines)
-                            divided_lines = []
-                        current_author = author
+                        current_author = line
                         continue
+
+                    if len(line) < TITLE_CONTENT_THRESHOLD:  # title
+                        # 将当前分词后的结果加入结果表中
+                        result.add_cut_poetry(current_author, divided_lines)
+                        result.author_counter[current_author] += 1
+                        divided_lines = []
+                        continue
+
                     # 解析诗句
                     chars = [c for c in line if _is_chinese(c)]
                     for char in chars:
