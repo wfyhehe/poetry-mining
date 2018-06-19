@@ -25,8 +25,8 @@ def example():
         w2v_vector_list.append(analyzer.w2v_word_vector_tsne[index])
         tf_idf_vector_list.append(analyzer.tfidf_word_vector_tsne[index])
         author_list.append(author)
-    plot_vectors(tf_idf_vector_list, author_list)
-    plot_vectors(w2v_vector_list, author_list)
+    plot_vectors(tf_idf_vector_list, author_list, 'tf_idf')
+    plot_vectors(w2v_vector_list, author_list, 'w2v')
 
     print("**基于统计的分析")
     print("写作数量排名：")
@@ -56,13 +56,13 @@ def example():
 
     print("**基于词向量的分析")
     for word in list(most_common_nouns):
-        print("与 %s 相关的词：" % word)
-        print_counter(analyzer.find_similar_word(word))
+        print("与 %s 相关的词：" % word[0])
+        print_counter(analyzer.find_similar_word(word[0]))
 
     for poet in list(most_productive_poets)[:4]:
-        print("与 %s 用词相近的诗人：" % poet)
-        print("根据tf-idf标准： %s" % analyzer.find_similar_poet(poet))
-        print("根据word2vector标准： %s\n" % analyzer.find_similar_poet(poet, use_w2v=True))
+        print("与 %s 用词相近的诗人：" % poet[0])
+        print("根据tf-idf标准： %s" % analyzer.find_similar_poet(poet[0]))
+        print("根据word2vector标准： %s\n" % analyzer.find_similar_poet(poet[0], use_w2v=True))
 
 
 def shrink():

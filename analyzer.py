@@ -11,19 +11,13 @@ from gensim.models.word2vec import LineSentence, Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
 
-# from matplotlib.font_manager import FontProperties
-# font = FontProperties(fname=r"/usr/local/share/fonts/simhei.ttf", size=14)
-
-# mpl.rcParams['font.sans-serif'] = ['AR PL UMing CN']  # 指定默认字体
-# plt.rcParams['axes.unicode_minus'] = False  # 显示负号
-mpl.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 指定默认字体
 mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题
 
 
 class Analyzer(object):
     """
     cut_result:分词结果
-    authors: 作者列表
+    authors: 作者列表pl
     tfidf_word_vector: 用tf-idf为标准得到的词向量
     w2v_word_vector: 用word2vector得到的词向量
     w2v_model: 用word2vector得到的model
@@ -31,7 +25,7 @@ class Analyzer(object):
     w2v_word_vector_tsne: 降维后的词向量
     """
 
-    def __init__(self, cut_result, saved_dir):
+    def __init__(self, cut_result):
         self.cut_result = cut_result
         self.authors = list(cut_result.author_poetry_dict.keys())
         print('begin analyzing cut result...')
@@ -116,7 +110,7 @@ class Analyzer(object):
         return self.w2v_model.most_similar(word)
 
 
-def plot_vectors(X, target):
+def plot_vectors(X, target, filename):
     """绘制结果"""
     x_min, x_max = np.min(X, 0), np.max(X, 0)
     X = (X - x_min) / (x_max - x_min)
@@ -125,8 +119,9 @@ def plot_vectors(X, target):
     for i in range(X.shape[0]):
         plt.text(X[i, 0], X[i, 1], target[i],
                  # color=plt.cm.Set1(y[i] / 10.),
-                 fontdict={'weight': 'bold', 'size': 4}
+                 fontdict={'size': 8}
                  )
+    plt.savefig('images/%s' % filename)
     plt.show()
 
 
@@ -139,7 +134,7 @@ def get_analyzer(result, saved_dir):
         with open(target_file_path, 'rb') as f:
             analyzer = pickle.load(f)
     else:
-        analyzer = Analyzer(result, saved_dir)
+        analyzer = Analyzer(result)
         with open(target_file_path, 'wb') as f:
             pickle.dump(analyzer, f)
         f.close()
