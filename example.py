@@ -1,7 +1,7 @@
 import os
 import random
 
-from analyzer import Analyzer, plot_vectors
+from analyzer import plot_vectors, get_analyzer
 from preprocessor import CutResult, cut_poetry
 
 
@@ -14,7 +14,7 @@ def print_counter(counter):
 def example():
     saved_dir = os.path.join(os.curdir, "out")
     result = cut_poetry("全宋词.txt", saved_dir)
-    analyzer = Analyzer(result, saved_dir)
+    analyzer = get_analyzer(result, saved_dir)
     # 画图
     tf_idf_vector_list = []
     w2v_vector_list = []

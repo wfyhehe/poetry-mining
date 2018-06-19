@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 import multiprocessing
 import os
+import pickle
+
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
@@ -12,8 +14,10 @@ from sklearn import manifold
 # from matplotlib.font_manager import FontProperties
 # font = FontProperties(fname=r"/usr/local/share/fonts/simhei.ttf", size=14)
 
-mpl.rcParams['font.sans-serif'] = ['AR PL UMing CN']  # 指定默认字体
-plt.rcParams['axes.unicode_minus'] = False  # 显示负号
+# mpl.rcParams['font.sans-serif'] = ['AR PL UMing CN']  # 指定默认字体
+# plt.rcParams['axes.unicode_minus'] = False  # 显示负号
+mpl.rcParams['font.sans-serif'] = ['Microsoft YaHei']  # 指定默认字体
+mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显示为方块的问题
 
 
 class Analyzer(object):
@@ -124,3 +128,20 @@ def plot_vectors(X, target):
                  fontdict={'weight': 'bold', 'size': 4}
                  )
     plt.show()
+
+
+def get_analyzer(result, saved_dir):
+    target_file_path = os.path.join(saved_dir, 'analyzer_song.pkl')
+    if not os.path.exists(saved_dir):
+        os.mkdir(saved_dir)
+    if os.path.exists(target_file_path):
+        print('load existed analyzer.')
+        with open(target_file_path, 'rb') as f:
+            analyzer = pickle.load(f)
+    else:
+        analyzer = Analyzer(result, saved_dir)
+        with open(target_file_path, 'wb') as f:
+            pickle.dump(analyzer, f)
+        f.close()
+
+    return analyzer
