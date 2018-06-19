@@ -209,7 +209,7 @@
 ![](https://github.com/wfyhehe/poetry-mining/blob/master/images/tf_idf.png)
 
 对写诗数量前一百位的诗人的word2vector词向量降维结果如下：
-![](https://github.com/router8008/poetry-mining/blob/master/images/w2v.png)
+![](https://github.com/wfy/poetry-mining/blob/master/images/w2v.png)
 
 ## 运行样例
 
