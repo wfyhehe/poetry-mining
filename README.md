@@ -206,14 +206,10 @@
 ```
 
 对写诗数量前一百位的诗人的tf-idf词向量降维结果如下：
-![](https://github.com/router8008/poetry-mining/blob/master/images/tf_idf1.png)
-局部结果放大：
-![](https://github.com/router8008/poetry-mining/blob/master/images/tf_idf2.png)
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/tf_idf.png)
 
 对写诗数量前一百位的诗人的word2vector词向量降维结果如下：
-![](https://github.com/router8008/poetry-mining/blob/master/images/w2v1.png)
-局部结果放大：
-![](https://github.com/router8008/poetry-mining/blob/master/images/w2v2.png)
+![](https://github.com/router8008/poetry-mining/blob/master/images/w2v.png)
 
 ## 运行样例
 
