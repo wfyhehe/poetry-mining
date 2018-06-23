@@ -2,7 +2,7 @@ import os
 import random
 
 from analyzer import plot_vectors, get_analyzer
-from preprocessor import cut_poetry
+from preprocessor import stem_poem
 
 
 def print_counter(counter):
@@ -13,7 +13,7 @@ def print_counter(counter):
 
 def entry():
     saved_dir = os.path.join(os.curdir, "out")
-    result = cut_poetry("全宋词.txt", saved_dir)
+    result = stem_poem("全宋词.txt", saved_dir)
     analyzer = get_analyzer(result, saved_dir)
     # 画图
     tf_idf_vector_list = []

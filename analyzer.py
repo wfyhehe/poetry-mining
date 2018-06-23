@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
+from constants import ANALYZE_RESULT_FILENAME
 from gensim.models.word2vec import LineSentence, Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
@@ -126,7 +127,7 @@ def plot_vectors(X, target, filename):
 
 
 def get_analyzer(result, saved_dir):
-    target_file_path = os.path.join(saved_dir, 'analyzer_song.pkl')
+    target_file_path = os.path.join(saved_dir, ANALYZE_RESULT_FILENAME)
     if not os.path.exists(saved_dir):
         os.mkdir(saved_dir)
     if os.path.exists(target_file_path):

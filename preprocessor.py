@@ -3,7 +3,7 @@ import pickle
 
 from collections import Counter, OrderedDict
 from jieba import posseg as pseg
-from constants import TITLE_CONTENT_THRESHOLD, END_POET_LIST_SEPARATOR
+from constants import TITLE_CONTENT_THRESHOLD, END_POET_LIST_SEPARATOR, STEM_RESULT_FILENAME
 
 
 class CutResult(object):
@@ -18,11 +18,11 @@ class CutResult(object):
     """
 
     def __init__(self):
-        self.char_counter = Counter()
-        self.author_counter = Counter()
         self.word_set = set()
         self.word_counter = Counter()
         self.word_property_counter_dict = {}
+        self.char_counter = Counter()
+        self.author_counter = Counter()
         self.author_poetry_dict = OrderedDict()
 
     def add_cut_poetry(self, author, divided_lines):
@@ -35,18 +35,18 @@ class CutResult(object):
         self.author_poetry_dict[author] += ' '.join(divided_lines)
 
 
-def _is_chinese(c):
+def _is_chinese_character(c):
     return '\u4e00' <= c <= '\u9fff'
 
 
-def cut_poetry(filename, saved_dir):
+def stem_poem(filename, saved_dir):
     """
     对全宋词分词
-    :PARAM: FILENAME: 全宋词输入文件位置
-            SAVED_LOCATION: 结果存储位置
+    :PARAM: filename: 全宋词文件名
+            saved_dir: 储存位置(out)
     :RETURN:分词结果
     """
-    target_file_path = os.path.join(saved_dir, 'cut_result_song.pkl')
+    target_file_path = os.path.join(saved_dir, STEM_RESULT_FILENAME)
     if not os.path.exists(saved_dir):
         os.mkdir(saved_dir)
     if os.path.exists(target_file_path):
@@ -93,12 +93,12 @@ def cut_poetry(filename, saved_dir):
                         continue
 
                     # 解析诗句
-                    chars = [c for c in line if _is_chinese(c)]
+                    chars = [c for c in line if _is_chinese_character(c)]
                     for char in chars:
                         result.char_counter[char] += 1
                     cut_line = pseg.cut(line)
                     for word, property in cut_line:
-                        if not _is_chinese(word):
+                        if not _is_chinese_character(word):
                             continue
                         if result.word_property_counter_dict.get(property) is None:
                             result.word_property_counter_dict[property] = Counter()
@@ -107,7 +107,10 @@ def cut_poetry(filename, saved_dir):
                         result.word_counter[word] += 1
                         divided_lines.append(word)
                 except Exception as e:
-                    print("%d-解析全宋词文件异常 %s" % (line_count, line))
+                    print('{line_num}-解析全宋词文件异常 {line}'.format(
+                        line_num=line_count,
+                        line=line,
+                    ))
                     raise e
         # 加入最后一次解析的结果
         result.add_cut_poetry(current_author, divided_lines)
