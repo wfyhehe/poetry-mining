@@ -5,6 +5,7 @@ from collections import Counter, OrderedDict
 from jieba import posseg as pseg
 from constants import TITLE_CONTENT_THRESHOLD, END_POET_LIST_SEPARATOR
 
+
 class CutResult(object):
     """
     分词结果

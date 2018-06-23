@@ -2,7 +2,7 @@ import os
 import random
 
 from analyzer import plot_vectors, get_analyzer
-from preprocessor import CutResult, cut_poetry
+from preprocessor import cut_poetry
 
 
 def print_counter(counter):
@@ -11,7 +11,7 @@ def print_counter(counter):
     print()
 
 
-def example():
+def entry():
     saved_dir = os.path.join(os.curdir, "out")
     result = cut_poetry("全宋词.txt", saved_dir)
     analyzer = get_analyzer(result, saved_dir)
@@ -94,5 +94,5 @@ def shrink():
 
 
 if __name__ == '__main__':
-    example()
+    entry()
     # shrink()
