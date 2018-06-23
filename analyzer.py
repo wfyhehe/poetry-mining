@@ -99,7 +99,10 @@ class Analyzer(object):
             if i == poet_index:
                 continue
             y = word_vector[i]
-            cos = x.dot(y) / (np.sqrt(x.dot(x)) * np.sqrt(y.dot(y)))
+            denominator = np.sqrt(x.dot(x)) * np.sqrt(y.dot(y))
+            if denominator == 0:
+                continue
+            cos = x.dot(y) / denominator
             angle = np.arccos(cos)
             if min_angle > angle:
                 min_angle = angle
@@ -117,10 +120,7 @@ def plot_vectors(X, target, filename):
 
     plt.figure()
     for i in range(X.shape[0]):
-        plt.text(X[i, 0], X[i, 1], target[i],
-                 # color=plt.cm.Set1(y[i] / 10.),
-                 fontdict={'size': 8}
-                 )
+        plt.text(X[i, 0], X[i, 1], target[i], fontdict={'size': 8})
     plt.savefig('images/%s' % filename)
     plt.show()
 
