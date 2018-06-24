@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-from constants import ANALYZE_RESULT_FILENAME
+from constants import ANALYZE_RESULT_FILENAME, MIN_COUNT
 from gensim.models.word2vec import LineSentence, Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
@@ -44,7 +44,7 @@ class Analyzer(object):
     def _author_word_vector(author_poetry_dict):
         """用tf-idf为标准解析每个作者的词向量"""
         poetry = list(author_poetry_dict.values())
-        vectorizer = CountVectorizer(min_df=15)
+        vectorizer = CountVectorizer(min_df=MIN_COUNT)
         word_matrix = vectorizer.fit_transform(poetry).toarray()
         transformer = TfidfTransformer()
         tfidf_word_vector = transformer.fit_transform(word_matrix).toarray()
@@ -56,9 +56,9 @@ class Analyzer(object):
         dimension = 600
         authors = list(author_poetry_dict.keys())
         poetry = list(author_poetry_dict.values())
-        with open("cut_poetry", 'w') as f:
+        with open('temp', 'w') as f:
             f.write("\n".join(poetry))
-        model = Word2Vec(LineSentence("cut_poetry"), size=dimension, min_count=15,
+        model = Word2Vec(LineSentence('temp'), size=dimension, min_count=MIN_COUNT,
                          workers=multiprocessing.cpu_count())
         word_vector = []
         for i, author in enumerate(authors):
