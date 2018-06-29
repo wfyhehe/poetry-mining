@@ -1,6 +1,8 @@
 import os
 import random
 
+import matplotlib.pyplot as plt
+from wordcloud import WordCloud
 from constants import WordType, DISPLAY_COUNT, POET_COUNT
 from analyzer import plot_vectors, get_analyzer
 from preprocessor import stem_poem
@@ -45,6 +47,20 @@ def entry():
             most_frequent_words.append((word, count))
             cnt += 1
     show_counter(most_frequent_words)
+
+    most_frequent_word_dict = {}
+    for word in most_frequent_words:
+        most_frequent_word_dict[word[0]] = word[1]
+
+    my_wordcloud = WordCloud(
+        font_path='Library/Fonts/msyh.ttf',
+        background_color='white',
+        scale=2,
+    ).fit_words(most_frequent_word_dict)
+
+    plt.imshow(my_wordcloud)
+    plt.axis("off")
+    plt.show()
 
     print("最常用的名词：")
     most_common_nouns = result.word_property_counter_dict[WordType.NOUN].most_common(DISPLAY_COUNT)
