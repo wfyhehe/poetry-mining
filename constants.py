@@ -4,9 +4,14 @@ STEM_RESULT_FILENAME = 'stem_result.pkl'
 ANALYZE_RESULT_FILENAME = 'analyze_result.pkl'
 MIN_COUNT = 15
 DISPLAY_COUNT = 10
+POET_COUNT = 50
 
 
 class WordType:
     ADJ = 'a'
     NOUN = 'n'
+    VERB = 'v'
     PLACE = 'ns'
+    CONJ = 'c'
+    PREP = 'p'
+    NUM = 'm'

@@ -112,6 +112,7 @@ def stem_poem(filename, saved_dir):
                         line=line,
                     ))
                     raise e
+
         # 加入最后一次解析的结果
         result.add_cut_poetry(current_author, divided_lines)
         with open(target_file_path, 'wb') as f:

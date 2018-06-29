@@ -1,26 +1,26 @@
 import os
 import random
 
-from constants import WordType, DISPLAY_COUNT
+from constants import WordType, DISPLAY_COUNT, POET_COUNT
 from analyzer import plot_vectors, get_analyzer
 from preprocessor import stem_poem
 
 
-def show_counter(counter):
-    for key, value in counter:
-        print(key, value)
-    print()
-
-
 def entry():
+    # 确定保存位置
     saved_dir = os.path.join(os.curdir, "out")
+
+    # 对宋词进行分词
     result = stem_poem("全宋词.txt", saved_dir)
+
+    # 用word2vector和tfidf算法对所有宋词数据进行学习和分析，得到词向量
     analyzer = get_analyzer(result, saved_dir)
-    # 画图
+
+    # 装填词人的
     tf_idf_vector_list = []
     w2v_vector_list = []
     author_list = []
-    for c in result.author_counter.most_common(100):
+    for c in result.author_counter.most_common(POET_COUNT):
         author = c[0]
         index = analyzer.authors.index(author)
         w2v_vector_list.append(analyzer.w2v_word_vector_tsne[index])
@@ -29,12 +29,13 @@ def entry():
     plot_vectors(tf_idf_vector_list, author_list, 'tf_idf')
     plot_vectors(w2v_vector_list, author_list, 'w2v')
 
-    print("**基于统计的分析")
+    print("统计分析")
+    print("-----------------")
     print("写作数量排名：")
-    most_productive_poets = result.author_counter.most_common(10)
+    most_productive_poets = result.author_counter.most_common(DISPLAY_COUNT)
     show_counter(most_productive_poets)
 
-    print("最常用的词：")
+    print("最常用的非单字词：")
     cnt = 0
     most_frequent_words = []
     for word, count in result.word_counter.most_common():
@@ -49,11 +50,23 @@ def entry():
     most_common_nouns = result.word_property_counter_dict[WordType.NOUN].most_common(DISPLAY_COUNT)
     show_counter(most_common_nouns)
 
-    print("最常见的地名：")
+    print("最常用的地名：")
     show_counter(result.word_property_counter_dict[WordType.PLACE].most_common(DISPLAY_COUNT))
 
-    print("最常见的形容词：")
+    print("最常用的形容词：")
     show_counter(result.word_property_counter_dict[WordType.ADJ].most_common(DISPLAY_COUNT))
+
+    print("最常用的连词：")
+    show_counter(result.word_property_counter_dict[WordType.CONJ].most_common(DISPLAY_COUNT))
+
+    print("最常用的数词：")
+    show_counter(result.word_property_counter_dict[WordType.NUM].most_common(DISPLAY_COUNT))
+
+    print("最常用的介词：")
+    show_counter(result.word_property_counter_dict[WordType.PREP].most_common(DISPLAY_COUNT))
+
+    print("最常用的动词：")
+    show_counter(result.word_property_counter_dict[WordType.VERB].most_common(DISPLAY_COUNT))
 
     print("**基于词向量的分析")
     for word in list(most_common_nouns):
@@ -62,8 +75,8 @@ def entry():
 
     for poet in list(most_productive_poets)[:4]:
         print("与 %s 用词相近的诗人：" % poet[0])
-        print("根据tf-idf标准： %s" % analyzer.find_similar_poet(poet[0]))
-        print("根据word2vector标准： %s\n" % analyzer.find_similar_poet(poet[0], use_w2v=True))
+        print("tf-idf标准： %s" % analyzer.find_similar_poet(poet[0]))
+        print("word2vector标准： %s\n" % analyzer.find_similar_poet(poet[0], use_w2v=True))
 
 
 def shrink():
@@ -92,6 +105,13 @@ def shrink():
 
     with open('全宋词_tiny.txt', 'w', encoding='utf-8') as f:
         f.writelines(poems)
+
+
+def show_counter(counter):
+    for k, v in counter:
+        print(k, v)
+
+    print()
 
 
 if __name__ == '__main__':
