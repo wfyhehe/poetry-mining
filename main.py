@@ -1,11 +1,12 @@
 import os
 import random
 
+from constants import WordType, DISPLAY_COUNT
 from analyzer import plot_vectors, get_analyzer
 from preprocessor import stem_poem
 
 
-def print_counter(counter):
+def show_counter(counter):
     for key, value in counter:
         print(key, value)
     print()
@@ -31,33 +32,33 @@ def entry():
     print("**基于统计的分析")
     print("写作数量排名：")
     most_productive_poets = result.author_counter.most_common(10)
-    print_counter(most_productive_poets)
+    show_counter(most_productive_poets)
 
     print("最常用的词：")
     cnt = 0
-    l = []
+    most_frequent_words = []
     for word, count in result.word_counter.most_common():
-        if cnt == 10:
+        if cnt >= DISPLAY_COUNT:
             break
         if len(word) > 1:
-            l.append((word, count))
+            most_frequent_words.append((word, count))
             cnt += 1
-    print_counter(l)
+    show_counter(most_frequent_words)
 
     print("最常用的名词：")
-    most_common_nouns = result.word_property_counter_dict['n'].most_common(10)
-    print_counter(most_common_nouns)
+    most_common_nouns = result.word_property_counter_dict[WordType.NOUN].most_common(DISPLAY_COUNT)
+    show_counter(most_common_nouns)
 
     print("最常见的地名：")
-    print_counter(result.word_property_counter_dict['ns'].most_common(10))
+    show_counter(result.word_property_counter_dict[WordType.PLACE].most_common(DISPLAY_COUNT))
 
     print("最常见的形容词：")
-    print_counter(result.word_property_counter_dict['a'].most_common(10))
+    show_counter(result.word_property_counter_dict[WordType.ADJ].most_common(DISPLAY_COUNT))
 
     print("**基于词向量的分析")
     for word in list(most_common_nouns):
         print("与 %s 相关的词：" % word[0])
-        print_counter(analyzer.find_similar_word(word[0]))
+        show_counter(analyzer.find_similar_word(word[0]))
 
     for poet in list(most_productive_poets)[:4]:
         print("与 %s 用词相近的诗人：" % poet[0])
