@@ -120,10 +120,10 @@
 今年 249
 谁知 248
 梨花 247
-
+```
 对写诗数量前一百位的诗人的tf-idf词向量降维结果如下：
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/wordcloud.png)
-
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/wordcloud.jpg)
+```
 
 最常用的名词：
 人 4623
