@@ -32,16 +32,16 @@ class Analyzer(object):
         print('begin analyzing stem result...')
         self.stem_result = stem_result
         print('calculating poets tf-idf word vector...')
-        self.tfidf_word_vector = self._poet_word_vector(stem_result.poet_poetry_dict)
+        self.tfidf_word_vector = self._tfidf_word_vector(stem_result.poet_poetry_dict)
         print('calculating poets w2v word vector...')
-        self.w2v_model, self.w2v_word_vector = self._word2vec(stem_result.poet_poetry_dict)
+        self.w2v_model, self.w2v_word_vector = self._w2v_word_vector(stem_result.poet_poetry_dict)
         print('use t-sne for dimensionality reduction...')
         self.tfidf_word_vector_tsne = self._tsne(self.tfidf_word_vector)
         self.w2v_word_vector_tsne = self._tsne(self.w2v_word_vector)
         print('result saved.')
 
     @staticmethod
-    def _poet_word_vector(poet_poetry_dict):
+    def _tfidf_word_vector(poet_poetry_dict):
         """tf-idf 解析每个作者的词向量"""
         poetry = list(poet_poetry_dict.values())
         vectorizer = CountVectorizer(min_df=MIN_COUNT)
@@ -50,7 +50,7 @@ class Analyzer(object):
         return tfidf_word_vector
 
     @staticmethod
-    def _word2vec(poet_poetry_dict):
+    def _w2v_word_vector(poet_poetry_dict):
         """word2vector 解析每个作者的词向量"""
         poets = list(poet_poetry_dict.keys())
         poetry = list(poet_poetry_dict.values())

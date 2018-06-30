@@ -32,8 +32,9 @@ def entry():
     plot_vectors(tf_idf_vector_list, poet_list, 'tf_idf')
     plot_vectors(w2v_vector_list, poet_list, 'w2v')
 
-    print("统计分析")
-    print("-----------------")
+    print('统计分析')
+    print('-----------------')
+    print('统计了%s位词人的%s首词' % (len(result.poet_counter.keys()), sum(result.poet_counter.values())))
     print("写作数量排名：")
     most_productive_poets = result.poet_counter.most_common(DISPLAY_COUNT)
     show_counter(most_productive_poets)
