@@ -7,7 +7,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib as mpl
 
-from constants import ANALYZE_RESULT_FILENAME, MIN_COUNT
+from constants import ANALYZE_RESULT_FILENAME, MIN_COUNT, W2V_DIMENSION
 from gensim.models.word2vec import LineSentence, Word2Vec
 from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
 from sklearn import manifold
@@ -18,51 +18,56 @@ mpl.rcParams['axes.unicode_minus'] = False  # 解决保存图像是负号'-'显�
 class Analyzer(object):
     """
     stem_result:分词结果
-    authors: 作者列表pl
-    tfidf_word_vector: 用tf-idf为标准得到的词向量
-    w2v_word_vector: 用word2vector得到的词向量
+    poets: 词人列表
     w2v_model: 用word2vector得到的model
-    tfidf_word_vector_tsne: 降维后的词向量
-    w2v_word_vector_tsne: 降维后的词向量
+    w2v_word_vector: 用word2vector得到的词向量
+    w2v_word_vector_tsne: 降维后的word2vector词向量
+    tfidf_word_vector: 用tf-idf为标准得到的词向量
+    tfidf_word_vector_tsne: 降维后的tf-idf词向量
     """
 
     def __init__(self, stem_result):
         self.stem_result = stem_result
-        self.authors = list(stem_result.author_poetry_dict.keys())
+        self.poets = list(stem_result.poet_poetry_dict.keys())
         print('begin analyzing stem result...')
         self.stem_result = stem_result
-        print("calculating poets' tf-idf word vector...")
-        self.tfidf_word_vector = self._author_word_vector(stem_result.author_poetry_dict)
-        print("calculating poets' w2v word vector...")
-        self.w2v_model, self.w2v_word_vector = self._word2vec(stem_result.author_poetry_dict)
-        print("use t-sne for dimensionality reduction...")
+        print('calculating poets tf-idf word vector...')
+        self.tfidf_word_vector = self._poet_word_vector(stem_result.poet_poetry_dict)
+        print('calculating poets w2v word vector...')
+        self.w2v_model, self.w2v_word_vector = self._word2vec(stem_result.poet_poetry_dict)
+        print('use t-sne for dimensionality reduction...')
         self.tfidf_word_vector_tsne = self._tsne(self.tfidf_word_vector)
         self.w2v_word_vector_tsne = self._tsne(self.w2v_word_vector)
-        print("result saved.")
+        print('result saved.')
 
     @staticmethod
-    def _author_word_vector(author_poetry_dict):
-        """用tf-idf为标准解析每个作者的词向量"""
-        poetry = list(author_poetry_dict.values())
+    def _poet_word_vector(poet_poetry_dict):
+        """tf-idf 解析每个作者的词向量"""
+        poetry = list(poet_poetry_dict.values())
         vectorizer = CountVectorizer(min_df=MIN_COUNT)
         word_matrix = vectorizer.fit_transform(poetry).toarray()
-        transformer = TfidfTransformer()
-        tfidf_word_vector = transformer.fit_transform(word_matrix).toarray()
+        tfidf_word_vector = TfidfTransformer().fit_transform(word_matrix).toarray()
         return tfidf_word_vector
 
     @staticmethod
-    def _word2vec(author_poetry_dict):
-        """用word2vector解析每个作者的词向量"""
-        dimension = 600
-        authors = list(author_poetry_dict.keys())
-        poetry = list(author_poetry_dict.values())
+    def _word2vec(poet_poetry_dict):
+        """word2vector 解析每个作者的词向量"""
+        poets = list(poet_poetry_dict.keys())
+        poetry = list(poet_poetry_dict.values())
+
         with open('temp', 'w') as f:
-            f.write("\n".join(poetry))
-        model = Word2Vec(LineSentence('temp'), size=dimension, min_count=MIN_COUNT,
-                         workers=multiprocessing.cpu_count())
+            f.write('\n'.join(poetry))
+
+        model = Word2Vec(
+            LineSentence('temp'),
+            size=W2V_DIMENSION,
+            min_count=MIN_COUNT,
+            workers=multiprocessing.cpu_count(),
+        )
+
         word_vector = []
-        for i, author in enumerate(authors):
-            vec = np.zeros(dimension)
+        for i, poet in enumerate(poets):
+            vec = np.zeros(W2V_DIMENSION)
             words = poetry[i].split()
             count = 0
             for word in words:
@@ -70,20 +75,22 @@ class Analyzer(object):
                 try:
                     vec += model[word]
                     count += 1
-                except KeyError:  # 有的词语不满足min_count则不会被记录在词表中
+                except KeyError:  # 频率小于MIN_COUNT的词不会被统计
                     pass
 
             single_word_vector = np.array([v / count for v in vec]) \
                 if count > 0 else np.zeros(len(vec))
             word_vector.append(single_word_vector)
-        os.remove("temp")
+        os.remove('temp')
         return model, word_vector
 
     @staticmethod
     def _tsne(word_vector):
-        t_sne = manifold.TSNE(n_components=2, init='pca', random_state=0)
-        word_vector_tsne = t_sne.fit_transform(word_vector)
-        return word_vector_tsne
+        t_sne = manifold.TSNE(
+            n_components=2,
+            init='pca',
+        )
+        return t_sne.fit_transform(word_vector)
 
     def find_similar_poet(self, poet_name, use_w2v=False):
         """
@@ -92,11 +99,11 @@ class Analyzer(object):
         :return:最匹配的诗人
         """
         word_vector = self.tfidf_word_vector if not use_w2v else self.w2v_word_vector
-        poet_index = self.authors.index(poet_name)
+        poet_index = self.poets.index(poet_name)
         x = word_vector[poet_index]
         min_angle = np.pi
         min_index = 0
-        for i, author in enumerate(self.authors):
+        for i, poet in enumerate(self.poets):
             if i == poet_index:
                 continue
             y = word_vector[i]
@@ -108,7 +115,7 @@ class Analyzer(object):
             if min_angle > angle:
                 min_angle = angle
                 min_index = i
-        return self.authors[min_index]
+        return self.poets[min_index]
 
     def find_similar_word(self, word):
         return self.w2v_model.most_similar(word)

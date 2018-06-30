@@ -22,20 +22,20 @@ def entry():
     # 装填词人的词向量信息
     tf_idf_vector_list = []
     w2v_vector_list = []
-    author_list = []
-    for c in result.author_counter.most_common(POET_COUNT):
-        author = c[0]
-        index = analyzer.authors.index(author)
+    poet_list = []
+    for c in result.poet_counter.most_common(POET_COUNT):
+        poet = c[0]
+        index = analyzer.poets.index(poet)
         w2v_vector_list.append(analyzer.w2v_word_vector_tsne[index])
         tf_idf_vector_list.append(analyzer.tfidf_word_vector_tsne[index])
-        author_list.append(author)
-    plot_vectors(tf_idf_vector_list, author_list, 'tf_idf')
-    plot_vectors(w2v_vector_list, author_list, 'w2v')
+        poet_list.append(poet)
+    plot_vectors(tf_idf_vector_list, poet_list, 'tf_idf')
+    plot_vectors(w2v_vector_list, poet_list, 'w2v')
 
     print("统计分析")
     print("-----------------")
     print("写作数量排名：")
-    most_productive_poets = result.author_counter.most_common(DISPLAY_COUNT)
+    most_productive_poets = result.poet_counter.most_common(DISPLAY_COUNT)
     show_counter(most_productive_poets)
 
     print("最常用的非单字词：")
@@ -53,7 +53,7 @@ def entry():
     for word in most_frequent_words:
         most_frequent_word_dict[word[0]] = word[1]
 
-    show_wordcloud(most_frequent_word_dict)
+    show_wordcloud(most_frequent_word_dict, '全宋词词云')
 
     print("最常用的名词：")
     most_common_nouns = result.word_property_counter_dict[WordType.NOUN].most_common(DISPLAY_COUNT)
@@ -83,9 +83,24 @@ def entry():
         show_counter(analyzer.find_similar_word(word[0]))
 
     for poet in list(most_productive_poets)[:4]:
-        print("与 %s 用词相近的诗人：" % poet[0])
-        print("tf-idf标准： %s" % analyzer.find_similar_poet(poet[0]))
-        print("word2vector标准： %s\n" % analyzer.find_similar_poet(poet[0], use_w2v=True))
+        poet_name = poet[0]
+        print("与 %s 用词相近的诗人：" % poet_name)
+        print("tf-idf标准： %s" % analyzer.find_similar_poet(poet_name))
+        print("word2vector标准： %s\n" % analyzer.find_similar_poet(poet_name, use_w2v=True))
+
+        cnt = 0
+        most_frequent_words = []
+        for word, count in result.poet_word_counter[poet_name].most_common():
+            if cnt >= WORD_COULD_COUNT:
+                break
+            if len(word) > 1:
+                most_frequent_words.append((word, count))
+                cnt += 1
+        most_frequent_word_dict = {}
+        for word in most_frequent_words:
+            most_frequent_word_dict[word[0]] = word[1]
+
+        show_wordcloud(most_frequent_word_dict, poet_name)
 
 
 def shrink():
@@ -123,7 +138,7 @@ def show_counter(counter):
     print()
 
 
-def show_wordcloud(word_dict):
+def show_wordcloud(word_dict, title=None):
     wordcloud = WordCloud(
         font_path='Library/Fonts/msyh.ttf',
         background_color='white',
@@ -131,6 +146,8 @@ def show_wordcloud(word_dict):
     ).fit_words(word_dict)
     plt.imshow(wordcloud)
     plt.axis("off")
+    if title:
+        plt.title(title)
     plt.show()
 
 
