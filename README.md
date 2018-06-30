@@ -123,8 +123,7 @@
 谁知 248
 梨花 247
 ```
-对写诗数量前一百位的诗人的tf-idf词向量降维结果如下：
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/wordcloud.jpg)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/wordcloud.png)
 ```
 
 最常用的名词：
@@ -333,56 +332,36 @@
 渠 0.817533016204834
 ```
 与 辛弃疾 用词相近的诗人：  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/xinqiji.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/xinqiji.png)
 
 根据tf-idf标准： 刘辰翁  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/liuchenweng.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/liuchenweng.png)
 
 根据word2vector标准： 方岳  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/fangyue.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/fangyue.png)
 
 与 苏轼 用词相近的诗人：  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/sushi.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/sushi.png)
 
 根据tf-idf标准： 辛弃疾  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/xinqiji.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/xinqiji.png)
 
 根据word2vector标准： 刘过  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/liuguo.png)
-
-与 赵长卿 用词相近的诗人：  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/zhaochangqing.png)
-
-根据tf-idf标准： 欧阳修  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/ouyangxiu.png)
-
-根据word2vector标准： 李之仪  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/lizhiyi.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/liuguo.png)
 
 与 刘辰翁 用词相近的诗人：  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/liuchenweng.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/liuchenweng.png)
 
 根据tf-idf标准： 辛弃疾  
-
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/xinqiji.png)
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/xinqiji.png)
 
 根据word2vector标准： 辛弃疾
 
-对写诗数量前一百位的诗人的tf-idf词向量降维结果如下：
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/tf_idf.png)
+对写诗数量前一百位的诗人的tf-idf词向量降维结果如下： 
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/tf-idf.png)
 
-对写诗数量前一百位的诗人的word2vector词向量降维结果如下：
-![](https://github.com/wfyhehe/poetry-mining/blob/master/images/w2v.png)
+对写诗数量前一百位的诗人的word2vector词向量降维结果如下： 
+![](https://raw.githubusercontent.com/wfyhehe/poetry-mining/master/images/w2v.png)
 
 
 ## 运行样例
@@ -394,8 +373,7 @@
 另外，还需要如下环境：
 
 ```shell
-pip3 install jieba 		#用于中文分词
-pip3 install gensim		#用于计算word2vec
+pip install -r requirements.txt
 ```
 
 #### 运行方法
