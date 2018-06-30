@@ -3,9 +3,9 @@ import random
 
 import matplotlib.pyplot as plt
 from wordcloud import WordCloud
-from constants import WordType, DISPLAY_COUNT, POET_COUNT
+from constants import WordType, DISPLAY_COUNT, POET_COUNT, WORD_COULD_COUNT
 from analyzer import plot_vectors, get_analyzer
-from preprocessor import stem_poem
+from preprocessor import StemResult
 
 
 def entry():
@@ -13,12 +13,13 @@ def entry():
     saved_dir = os.path.join(os.curdir, "out")
 
     # 对宋词进行分词
-    result = stem_poem("全宋词.txt", saved_dir)
+    result = StemResult()
+    result = result.stem_poem("全宋词.txt", saved_dir)
 
     # 用word2vector和tfidf算法对所有宋词数据进行学习和分析，得到词向量
     analyzer = get_analyzer(result, saved_dir)
 
-    # 装填词人的
+    # 装填词人的词向量信息
     tf_idf_vector_list = []
     w2v_vector_list = []
     author_list = []
@@ -41,26 +42,18 @@ def entry():
     cnt = 0
     most_frequent_words = []
     for word, count in result.word_counter.most_common():
-        if cnt >= DISPLAY_COUNT:
+        if cnt >= WORD_COULD_COUNT:
             break
         if len(word) > 1:
             most_frequent_words.append((word, count))
             cnt += 1
-    show_counter(most_frequent_words)
+    show_counter(most_frequent_words[:DISPLAY_COUNT])
 
     most_frequent_word_dict = {}
     for word in most_frequent_words:
         most_frequent_word_dict[word[0]] = word[1]
 
-    my_wordcloud = WordCloud(
-        font_path='Library/Fonts/msyh.ttf',
-        background_color='white',
-        scale=2,
-    ).fit_words(most_frequent_word_dict)
-
-    plt.imshow(my_wordcloud)
-    plt.axis("off")
-    plt.show()
+    show_wordcloud(most_frequent_word_dict)
 
     print("最常用的名词：")
     most_common_nouns = result.word_property_counter_dict[WordType.NOUN].most_common(DISPLAY_COUNT)
@@ -128,6 +121,17 @@ def show_counter(counter):
         print(k, v)
 
     print()
+
+
+def show_wordcloud(word_dict):
+    wordcloud = WordCloud(
+        font_path='Library/Fonts/msyh.ttf',
+        background_color='white',
+        scale=2,
+    ).fit_words(word_dict)
+    plt.imshow(wordcloud)
+    plt.axis("off")
+    plt.show()
 
 
 if __name__ == '__main__':

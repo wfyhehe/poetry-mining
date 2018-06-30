@@ -334,27 +334,22 @@ python3 example.py
 
 - **tf-idf**
 
-  通过文本中词语的的tf-idf值计算诗人的用词特征，之后计算他们的余弦相似度，推荐一篇可以参考相关知识的blog：[sklearn文本特征提取](http://blog.csdn.net/xiaoxiangzi222/article/details/53490227)。
-
-  这种方法的的弊端在于没有考虑到词语之间的关联性，比如说"青"，"白"之间的关联程度，和"青"，"衣"之间的关联度肯定是不同的，所以引入了下一种计算词向量的方法。
+  通过文本中词语的的tf-idf值计算词人的用词特征，之后计算他们的余弦相似度
+  
+  这种方法的的弊端在于没有考虑到词语之间的关联性，比如说"酒"，"杯"之间的关联程度，和"酒"，"劝"之间的关联度肯定是不同的，所以引入了下一种计算词向量的方法。
 
 
 - **word2vec**
 
-  Word2Vec的基本思想是把自然语言中的每一个词，表示成一个统一意义统一维度的短向量。通过word2vec训练后，得到每个词语的词向量，再通过求和平均的方法获得文本的词向量，则可以得到每个诗人的词向量。当然，求平均肯定不是一个计算文档词向量的最优方法，此处有待改进。
-
-  关于这个方法可以参考：[word2vec&doc2vec词向量模型](http://www.cnblogs.com/maybe2030/p/5427148.html)
+  Word2Vec的基本思想是把自然语言中的每一个词，表示成一个统一意义统一维度的短向量。通过word2vec训练后，得到每个词语的词向量，再通过求和平均的方法获得文本的词向量，则可以得到每个诗人的词向量。
+  
+  求平均的方法来计算文档词向量可能不是的最优方法，可以查阅文献资料寻找更好的办法。
 
 
 #### 数据降维
 
 为了便于显示，将计算结果降维，用到了t-SNE算法。
 
-关于t-SNE算法可以参考：[t-SNE聚类算法实践指南](https://yq.aliyun.com/articles/70733)，其中的代码实现可以参考sklearn的官方文档：[Manifold learning on handwritten digits: Locally Linear Embedding, Isomap…](http://scikit-learn.org/stable/auto_examples/manifold/plot_lle_digits.html#sphx-glr-auto-examples-manifold-plot-lle-digits-py)
-
-
 ---
 
-
-### 欢迎对该样例进行补充和修改！
 
