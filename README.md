@@ -281,23 +281,41 @@
 若 0.8258308172225952
 须 0.8257279396057129
 渠 0.817533016204834
-
+```
 与 辛弃疾 用词相近的诗人：
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/xinqiji.png)
+
 根据tf-idf标准： 刘辰翁
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/liuchenweng.png)
+
 根据word2vector标准： 方岳
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/fangyue.png)
 
 与 苏轼 用词相近的诗人：
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/sushi.png)
+
 根据tf-idf标准： 辛弃疾
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/xinqiji.png)
+
 根据word2vector标准： 刘过
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/liuguo.png)
 
 与 赵长卿 用词相近的诗人：
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/zhaochangqing.png)
+
 根据tf-idf标准： 欧阳修
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/ouyangxiu.png)
+
 根据word2vector标准： 李之仪
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/lizhiyi.png)
 
 与 刘辰翁 用词相近的诗人：
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/liuchenweng.png)
+
 根据tf-idf标准： 辛弃疾
+![](https://github.com/wfyhehe/poetry-mining/blob/master/images/xinqiji.png)
+
 根据word2vector标准： 辛弃疾
-```
 
 对写诗数量前一百位的诗人的tf-idf词向量降维结果如下：
 ![](https://github.com/wfyhehe/poetry-mining/blob/master/images/tf_idf.png)
